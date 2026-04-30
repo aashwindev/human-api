@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Human API — Aashwin Dev</title>
+<meta name="description" content="The alternate intelligence of a person." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:            #080808;
+    --bg2:           #0f0f0f;
+    --bg3:           #161616;
+    --bg4:           #1c1c1c;
+    --border:        rgba(255,255,255,0.06);
+    --border-mid:    rgba(255,255,255,0.12);
+    --border-bright: rgba(255,255,255,0.22);
+    --text-primary:  #ede8e0;
+    --text-secondary:#938e87;
+    --text-tertiary: #504c48;
+    --gold:          #d4a853;
+    --gold-dim:      #8a6d35;
+    --red:           #d95f52;
+    --teal:          #3d9e7a;
+    --purple:        #6e62c4;
+    --cream:         #f5f0e8;
+    --ease:          cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; background: var(--bg); }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--gold); color: var(--bg); }
+
+  a { color: inherit; text-decoration: none; }
+
+  button, input { font-family: inherit; font-size: inherit; color: inherit; background: none; border: none; outline: none; }
+
+  /* === Animations === */
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes pulse-red {
+    0%, 100% { opacity: 1; color: var(--red); }
+    50% { opacity: 0.4; }
+  }
+  @keyframes bounce-arrow {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+  @keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .fade-init {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+  }
+  .fade-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  /* === Layout === */
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  section { padding: 140px 0; position: relative; }
+  section:first-of-type { padding: 0; }
+
+  .section-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    font-weight: 500;
+  }
+
+  /* === Nav === */
+  nav.top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    background: rgba(8,8,8,0.85);
+    border-bottom: 1px solid var(--border);
+  }
+  nav.top .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  nav.top .brand {
+    color: var(--gold);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  nav.top .links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  nav.top .links a {
+    color: var(--text-tertiary);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    transition: color 0.2s var(--ease);
+  }
+  nav.top .links a:hover { color: var(--text-primary); }
+  nav.top .by {
+    color: var(--text-tertiary);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    margin-left: 8px;
+  }
+
+  /* === HERO === */
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 55% 45%;
+    align-items: center;
+    padding: 80px 48px 60px;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 48px;
+  }
+  .hero-left > * { opacity: 0; transform: translateY(18px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+  .hero-left.in > * { opacity: 1; transform: translateY(0); }
+
+  .status-badge {
+    display: inline-block;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .status-badge .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse-dot 3s infinite;
+    vertical-align: middle;
+  }
+
+  .hero h1 {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(44px, 5.6vw, 72px);
+    line-height: 1.05;
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+  }
+  .hero h1 .line { display: block; }
+  .hero h1 .gold { color: var(--gold); }
+
+  .hero .sub {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-top: 28px;
+    max-width: 480px;
+  }
+
+  .hero-stats {
+    margin-top: 28px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    border: 1px solid var(--gold-dim);
+    background: rgba(212,168,83,0.04);
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    text-transform: uppercase;
+  }
+
+  .hero-cta {
+    margin-top: 36px;
+    display: inline-block;
+    border: 1px solid var(--border-bright);
+    color: var(--text-primary);
+    padding: 12px 22px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+  }
+  .hero-cta:hover {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+  }
+
+  /* terminal */
+  .terminal {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s var(--ease), transform 1s var(--ease);
+  }
+  .terminal.in { opacity: 1; transform: translateY(0); }
+  .terminal-bar {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .terminal-dots { display: flex; gap: 6px; }
+  .terminal-dots span {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    display: block;
+  }
+  .terminal-dots .d1 { background: #ff5f56; }
+  .terminal-dots .d2 { background: #ffbd2e; }
+  .terminal-dots .d3 { background: #27c93f; }
+  .terminal-bar .label {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.08em;
+  }
+  .terminal pre {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    padding: 22px 22px 26px;
+    line-height: 1.45;
+    white-space: pre;
+    margin: 0;
+    overflow-x: auto;
+  }
+  .terminal pre .red-dot { color: var(--red); animation: pulse-red 1.4s infinite; }
+  .terminal pre .cursor {
+    display: inline-block;
+    color: var(--gold);
+    animation: blink-cursor 1s infinite;
+  }
+
+  .scroll-hint {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding-bottom: 40px;
+  }
+  .scroll-hint .arrow {
+    display: inline-block;
+    margin-left: 6px;
+    animation: bounce-arrow 2s infinite;
+  }
+
+  /* === Section 2 thesis === */
+  .thesis-quote {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(30px, 3.8vw, 48px);
+    line-height: 1.15;
+    color: var(--text-primary);
+    text-align: center;
+    max-width: 840px;
+    margin: 0 auto 96px;
+  }
+  .thesis-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .thesis-cols h4 {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .thesis-cols p {
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-bottom: 18px;
+  }
+  .thesis-statement {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: clamp(22px, 2.2vw, 28px);
+    color: var(--gold);
+    text-align: center;
+    margin-top: 96px;
+    line-height: 1.35;
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* === Stats === */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .stat-card {
+    background: var(--bg2);
+    border-top: 3px solid var(--gold);
+    padding: 36px 32px 32px;
+    transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
+    cursor: default;
+  }
+  .stat-card:hover {
+    transform: translateY(-4px);
+    background: var(--bg3);
+  }
+  .stat-num {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-size: clamp(40px, 4vw, 52px);
+    color: var(--gold);
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 14px 0 12px;
+  }
+  .stat-desc {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.65;
+  }
+
+  /* === Architecture / Layers === */
+  .arch-intro {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 80px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+  .layers { display: flex; flex-direction: column; gap: 16px; max-width: 1080px; margin: 0 auto; }
+  .layer {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-left-width: 3px;
+    border-left-style: solid;
+    padding: 32px 36px;
+    transition: all 0.25s var(--ease);
+    position: relative;
+  }
+  .layer:hover {
+    border-left-width: 4px;
+    background: var(--bg3);
+    border-color: var(--border-mid);
+  }
+  .layer:nth-child(1) { padding-left: 36px; border-left-color: var(--border-bright); }
+  .layer:nth-child(2) { padding-left: 44px; border-left-color: #c4714a; }
+  .layer:nth-child(3) { padding-left: 52px; border-left-color: #b09030; }
+  .layer:nth-child(4) {
+    padding-left: 60px;
+    background: rgba(217, 95, 82, 0.04);
+    border-color: rgba(217, 95, 82, 0.3);
+    border-left-color: var(--red);
+  }
+  .layer:nth-child(5) { padding-left: 68px; border-left-color: var(--teal); }
+  .layer:nth-child(6) { padding-left: 76px; border-left-color: var(--purple); }
+
+  .layer-num {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .layer-title {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+  .layer-title .red-pulse {
+    color: var(--red);
+    animation: pulse-red 1.4s infinite;
+    margin-right: 4px;
+  }
+  .layer-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 800px;
+  }
+  .badges { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .layer.video-layer .badge { color: var(--red); border-color: rgba(217,95,82,0.3); }
+  .key-moat {
+    position: absolute;
+    top: 20px; right: 24px;
+    font-size: 9px;
+    color: var(--red);
+    border: 1px solid rgba(217,95,82,0.4);
+    padding: 4px 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(217,95,82,0.06);
+  }
+  .key-moat .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse-red 1.4s infinite;
+    vertical-align: middle;
+  }
+
+  .arch-foot {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    margin-top: 56px;
+    letter-spacing: 0.04em;
+  }
+
+  /* === Video section === */
+  .video-section {
+    background: rgba(217,95,82,0.04);
+    border-top: 1px solid rgba(217,95,82,0.15);
+    border-bottom: 1px solid rgba(217,95,82,0.15);
+  }
+  .video-section .section-label { color: var(--red); }
+  .video-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    max-width: 1180px;
+    margin: 0 auto;
+    align-items: start;
+  }
+  .video-quote {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(28px, 3.2vw, 38px);
+    line-height: 1.2;
+    color: var(--text-primary);
+  }
+  .video-body p {
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-top: 22px;
+    font-size: 13px;
+  }
+
+  .compare {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    padding: 24px;
+    overflow-x: auto;
+  }
+  .compare table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+  }
+  .compare th, .compare td {
+    text-align: left;
+    padding: 8px 12px 8px 0;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.02em;
+  }
+  .compare th {
+    color: var(--gold);
+    font-weight: 500;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-bottom: 14px;
+  }
+  .compare td.h { color: var(--text-primary); }
+  .compare tr:last-child td { border-bottom: none; }
+
+  /* === Outputs === */
+  .outputs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  .output-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
+    padding: 38px 32px 36px;
+    transition: transform 0.25s var(--ease), background 0.25s var(--ease);
+  }
+  .output-card:hover { transform: translateY(-4px); background: var(--bg3); }
+  .output-card.purple { border-top-color: var(--purple); }
+  .output-card.teal   { border-top-color: var(--teal); }
+  .output-card.gold   { border-top-color: var(--gold); }
+  .output-num {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 64px;
+    color: var(--text-tertiary);
+    line-height: 1;
+  }
+  .output-title {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--text-primary);
+    margin: 16px 0 16px;
+  }
+  .output-divider { height: 1px; background: var(--border); margin: 0 0 18px; }
+  .output-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+  }
+  .outputs-foot {
+    text-align: center;
+    margin-top: 72px;
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    font-size: 20px;
+    color: var(--text-tertiary);
+    border-top: 1px solid var(--border);
+    padding-top: 48px;
+    max-width: 880px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* === Org Brain === */
+  .org-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 80px;
+    max-width: 1180px;
+    margin: 0 auto;
+    align-items: center;
+  }
+  .org-h {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 600;
+    font-size: clamp(22px, 2.4vw, 28px);
+    color: var(--text-primary);
+    margin-bottom: 28px;
+    line-height: 1.25;
+  }
+  .org-body p {
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-top: 18px;
+    font-size: 13px;
+  }
+  .org-chart {
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    padding: 32px 24px;
+    text-align: left;
+  }
+  .org-chart pre {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    white-space: pre;
+    margin: 0;
+  }
+  .org-chart pre .role {
+    color: var(--purple);
+    opacity: 0.85;
+  }
+
+  /* === Vision (cream/inverted) === */
+  .vision-section {
+    background: var(--cream);
+    color: var(--bg);
+  }
+  .vision-section .section-label { color: var(--bg); }
+  .vision-quote {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(40px, 5vw, 60px);
+    color: var(--bg);
+    line-height: 1.0;
+    text-align: center;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .vision-body {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.85;
+    max-width: 680px;
+    margin: 56px auto 0;
+  }
+  .vision-body p { margin-bottom: 18px; }
+
+  .timeline {
+    margin-top: 96px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    max-width: 1120px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .timeline-item .year {
+    color: var(--gold-dim);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .timeline-item .rule { width: 32px; height: 1px; background: #00000044; margin-bottom: 16px; }
+  .timeline-item .head {
+    color: var(--bg);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .timeline-item .body {
+    color: #555;
+    font-size: 12px;
+    line-height: 1.75;
+  }
+
+  .vision-statement {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(26px, 3vw, 36px);
+    color: var(--bg);
+    text-align: center;
+    margin-top: 96px;
+    line-height: 1.2;
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* === Quotes === */
+  .quotes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .quote-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 36px 36px 32px;
+    position: relative;
+  }
+  .quote-card .qmark {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 700;
+    font-size: 80px;
+    color: var(--gold);
+    opacity: 0.3;
+    line-height: 0.8;
+    position: absolute;
+    top: 18px; left: 24px;
+  }
+  .quote-card .quote-text {
+    position: relative;
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-primary);
+    line-height: 1.6;
+    margin-top: 28px;
+  }
+  .quote-card .attr {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 18px;
+  }
+
+  /* === Footer === */
+  footer {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    padding: 120px 48px 32px;
+    text-align: center;
+  }
+  .foot-mark {
+    font-family: "Cormorant Garamond", serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(56px, 6.4vw, 80px);
+    color: var(--text-tertiary);
+    line-height: 1;
+    transition: color 0.4s var(--ease);
+    cursor: default;
+  }
+  .foot-mark:hover { color: var(--text-primary); }
+  .foot-built {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-top: 24px;
+    letter-spacing: 0.04em;
+  }
+  .foot-tag {
+    color: var(--text-tertiary);
+    font-size: 11px;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+  .foot-form {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 40px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .foot-form input {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border-mid);
+    padding: 12px 14px;
+    color: var(--text-primary);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+  .foot-form input::placeholder { color: var(--text-tertiary); }
+  .foot-form button {
+    border: 1px solid var(--border-bright);
+    padding: 12px 22px;
+    color: var(--text-primary);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s var(--ease);
+    white-space: nowrap;
+  }
+  .foot-form button:hover {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+  }
+  .foot-form .submitted {
+    color: var(--gold);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    padding: 12px 0;
+  }
+  .foot-bar {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-tertiary);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* === Mobile === */
+  @media (max-width: 768px) {
+    .container { padding: 0 24px; }
+    section { padding: 96px 0; }
+
+    nav.top .inner { padding: 14px 20px; }
+    nav.top .links { gap: 16px; }
+    nav.top .links a:not(.brand-mobile) { display: none; }
+    nav.top .by { display: none; }
+
+    .hero {
+      grid-template-columns: 1fr;
+      padding: 60px 24px 40px;
+      gap: 32px;
+      min-height: auto;
+    }
+    .terminal { display: none; }
+
+    .thesis-cols { grid-template-columns: 1fr; gap: 40px; }
+    .stat-grid { grid-template-columns: 1fr 1fr; }
+    .layers { gap: 12px; }
+    .layer { padding: 24px !important; }
+    .key-moat { position: static; display: inline-block; margin-bottom: 12px; }
+    .video-grid { grid-template-columns: 1fr; gap: 40px; }
+    .outputs-grid { grid-template-columns: 1fr; }
+    .org-grid { grid-template-columns: 1fr; gap: 40px; }
+    .timeline { grid-template-columns: 1fr; gap: 32px; }
+    .quotes { grid-template-columns: 1fr; }
+    .foot-form { flex-direction: column; }
+    .foot-bar { flex-direction: column; gap: 8px; padding: 0 20px; padding-top: 20px; text-align: center; }
+    footer { padding: 80px 20px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<nav class="top">
+  <div class="inner">
+    <a href="#" class="brand">human://api</a>
+    <div class="links">
+      <a href="#thesis">Thesis</a>
+      <a href="#architecture">Architecture</a>
+      <a href="#vision">Vision</a>
+      <span class="by">by Aashwin Dev</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="status-badge"><span class="dot"></span>PRIVATE BETA · 2026</div>
+    <h1>
+      <span class="line" style="transition-delay: 100ms">The alternate</span>
+      <span class="line gold" style="transition-delay: 240ms">intelligence</span>
+      <span class="line" style="transition-delay: 380ms">of a person.</span>
+    </h1>
+    <p class="sub" style="transition-delay: 550ms">
+      Built from every signal you've ever left behind.<br />
+      Queryable by anyone. Available forever.<br />
+      The missing layer between humanity and the agent era.
+    </p>
+    <div class="hero-stats" style="transition-delay: 720ms">
+      <span class="hero-stat">97M MCP downloads/month</span>
+      <span class="hero-stat">0 Human APIs exist</span>
+    </div>
+    <a href="#" class="hero-cta" style="transition-delay: 900ms" onclick="document.querySelector('footer').scrollIntoView({behavior:'smooth'}); return false;">
+      Request early access &rarr;
+    </a>
+  </div>
+  <div class="hero-right">
+    <div class="terminal" id="terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+        <span class="label">human://api</span>
+      </div>
+      <pre id="terminal-content"></pre>
+    </div>
+  </div>
+</section>
+
+<div class="scroll-hint">scroll to understand the depth <span class="arrow">↓</span></div>
+
+<!-- ========== SECTION 2 - THESIS ========== -->
+<section id="thesis">
+  <div class="container">
+    <div class="section-label fade-init">// 01 — THESIS</div>
+    <div class="thesis-quote fade-init">
+      "You cannot be everywhere.<br />
+      Your knowledge dies with you.<br />
+      The agents that should help you<br />
+      don't know who you are.<br />
+      These are not three problems.<br />
+      They are one."
+    </div>
+    <div class="thesis-cols">
+      <div class="fade-init">
+        <h4>// THE WORLD AS IT IS</h4>
+        <p>Every high-performing person is a bottleneck. Their knowledge, judgment, and experience is the most valuable thing about them — and it cannot scale. You can't clone yourself. You miss opportunities constantly because there is only one of you.</p>
+        <p>Meanwhile, every agent deployed on your behalf starts from zero. No taste. No history. No context. Generic output that could have come from anyone. The agent era arrived in 2025 and immediately disappointed — not because the models were weak, but because they had no idea who they were acting for.</p>
+      </div>
+      <div class="fade-init">
+        <h4>// THE GAP</h4>
+        <p>MCP became the universal standard for connecting agents to tools and data. 97 million monthly SDK downloads. Anthropic, OpenAI, Google, Microsoft all adopted it. 5,800+ servers exist for databases, SaaS products, code repositories.</p>
+        <p>Zero exist for the human being.</p>
+        <p>Every organization is becoming queryable. Notion, Confluence, internal wikis — the document layer is being solved. The human layer — actual judgment, lived experience, specific style — is not queryable. It lives and dies with the individual.</p>
+      </div>
+    </div>
+    <div class="thesis-statement fade-init">
+      We are building the queryable model of a person.<br />
+      The missing half of the agentic internet.
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 3 - NUMBERS ========== -->
+<section id="numbers">
+  <div class="container">
+    <div class="section-label fade-init">// 02 — THE CASE</div>
+    <div class="stat-grid">
+      <div class="stat-card fade-init">
+        <div class="stat-num">97M</div>
+        <div class="stat-label">Monthly MCP SDK downloads</div>
+        <div class="stat-desc">The protocol is already at infrastructure scale. Agents are connecting to everything.</div>
+      </div>
+      <div class="stat-card fade-init">
+        <div class="stat-num">5,800+</div>
+        <div class="stat-label">MCP servers exist — for tools</div>
+        <div class="stat-desc">Zero exist for the human being. That is the gap we are filling.</div>
+      </div>
+      <div class="stat-card fade-init">
+        <div class="stat-num">15+</div>
+        <div class="stat-label">Digital surfaces per person</div>
+        <div class="stat-desc">None of them talk to each other. Your identity is shattered. We unify it.</div>
+      </div>
+      <div class="stat-card fade-init">
+        <div class="stat-num">0%</div>
+        <div class="stat-label">Of video data processed behaviorally</div>
+        <div class="stat-desc">The world transcribes. We extract behavior. How someone thinks is not in the words.</div>
+      </div>
+      <div class="stat-card fade-init">
+        <div class="stat-num">75%</div>
+        <div class="stat-label">Of API gateways support MCP by 2026</div>
+        <div class="stat-desc">Agents are becoming the default interface to everything. Except people.</div>
+      </div>
+      <div class="stat-card fade-init">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Personal video hours per lifetime</div>
+        <div class="stat-desc">The richest signal of who someone is. Completely untapped. Until now.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 4 - ARCHITECTURE ========== -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label fade-init">// 03 — ARCHITECTURE</div>
+    <p class="arch-intro fade-init">
+      Six layers. One complete model of a person.<br />
+      Built bottom-up. Exposed to the world as a callable API.
+    </p>
+    <div class="layers">
+      <div class="layer fade-init">
+        <div class="layer-num">// LAYER 01 — FOUNDATION</div>
+        <div class="layer-title">YOU — Private, self-sovereign, portable</div>
+        <div class="layer-desc">Your data. Your permissions. Your control. Local-first architecture. Nothing used to train external models. Nothing sold. Everything exportable. You are not the product — for the first time.</div>
+        <div class="badges">
+          <span class="badge">Privacy-first</span>
+          <span class="badge">Self-sovereign</span>
+          <span class="badge">Fully portable</span>
+          <span class="badge">Local-first</span>
+        </div>
+      </div>
+      <div class="layer fade-init">
+        <div class="layer-num">// LAYER 02 — INGESTION</div>
+        <div class="layer-title">Universal personal data connectors</div>
+        <div class="layer-desc">15+ sources in continuous sync: Notion, Gmail, Twitter/X, LinkedIn, Instagram saves, WhatsApp, Google Keep, browser bookmarks, Spotify, voice memos, meeting recordings, anonymous peer input forms. What people around you observe about you that you can't see in yourself.</div>
+        <div class="badges">
+          <span class="badge">15+ connectors</span>
+          <span class="badge">Continuous sync</span>
+          <span class="badge">Peer signal layer</span>
+          <span class="badge">Audio &amp; video</span>
+        </div>
+      </div>
+      <div class="layer fade-init">
+        <div class="layer-num">// LAYER 03 — TEXT INTELLIGENCE</div>
+        <div class="layer-title">Semantic processing across everything written</div>
+        <div class="layer-desc">Not storage. Understanding. Semantic chunking, entity linking, temporal tagging. What you believed in 2020 versus 2025. Your taste layer extracted from every save, like, and bookmark. The evolution of your thinking made visible.</div>
+        <div class="badges">
+          <span class="badge">Semantic chunking</span>
+          <span class="badge">Temporal tagging</span>
+          <span class="badge">Taste extraction</span>
+          <span class="badge">Belief evolution</span>
+        </div>
+      </div>
+      <div class="layer video-layer fade-init">
+        <div class="key-moat"><span class="dot"></span>KEY MOAT</div>
+        <div class="layer-num">// LAYER 04 — VIDEO BRAIN</div>
+        <div class="layer-title"><span class="red-pulse">●</span>Behavioral inference from video — not transcription</div>
+        <div class="layer-desc">The world extracts text from video and calls it done. We extract behavior. How you speak when certain versus uncertain. The micro-pause before a hard answer. The topics that light you up versus drain you. How you argue, lead, follow, decide. Voice memos and video journals are the richest signal of who someone actually is. This is the layer nobody has attempted. This is the moat.</div>
+        <div class="badges">
+          <span class="badge">Beyond transcription</span>
+          <span class="badge">Behavioral inference</span>
+          <span class="badge">Emotional cadence</span>
+          <span class="badge">Decision patterns</span>
+          <span class="badge">Cross-video evolution</span>
+        </div>
+      </div>
+      <div class="layer fade-init">
+        <div class="layer-num">// LAYER 05 — KNOWLEDGE GRAPH</div>
+        <div class="layer-title">The LLM wiki — a living model of your mind</div>
+        <div class="layer-desc">Not RAG over documents. A genuine graph: your beliefs, recurring themes, key people, how your thinking has evolved, what you keep returning to, what you've changed your mind about. Backlinks across every source. The system surfaces connections you've never consciously made.</div>
+        <div class="badges">
+          <span class="badge">Knowledge graph</span>
+          <span class="badge">Temporal memory</span>
+          <span class="badge">Belief evolution</span>
+          <span class="badge">Auto-backlinks</span>
+          <span class="badge">Living</span>
+        </div>
+      </div>
+      <div class="layer fade-init">
+        <div class="layer-num">// LAYER 06 — THE API</div>
+        <div class="layer-title">human://[you] — queryable by anyone, any agent</div>
+        <div class="layer-desc">Any agent calls your Human API to understand you. Your digital clone is this layer with a voice. Your skill downloads are additive knowledge modules on the graph — Paul Graham's essays combined with your thinking style, expressed as you. Not generic knowledge. Your knowledge.</div>
+        <div class="badges">
+          <span class="badge">MCP endpoint</span>
+          <span class="badge">Clone interface</span>
+          <span class="badge">Skill downloads</span>
+          <span class="badge">Permissioned</span>
+          <span class="badge">Always on</span>
+        </div>
+      </div>
+    </div>
+    <div class="arch-foot fade-init">Remove any layer — the model collapses. Every layer is the foundation of the next.</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 5 - VIDEO BREAKTHROUGH ========== -->
+<section id="video" class="video-section">
+  <div class="container">
+    <div class="section-label fade-init">// 04 — THE VIDEO BREAKTHROUGH</div>
+    <div class="video-grid">
+      <div class="video-body">
+        <div class="video-quote fade-init">
+          "Video is the richest signal<br />
+          of who a person is.<br />
+          Nobody is processing it."
+        </div>
+        <p class="fade-init">The average person generates thousands of hours of personal video — journals, calls, meetings, voice memos. Every existing AI product converts this to text and throws away 80% of the signal.</p>
+        <p class="fade-init">Tone. Pacing. Hesitation. The micro-pause before a difficult answer. The energy drop when a topic bores you. The sharpness when something matters. These are not transcribable. They are behavioral.</p>
+        <p class="fade-init">We extract the behavioral fingerprint of a person. This is what makes our model feel like a person. Everyone else's feels like a chatbot.</p>
+      </div>
+      <div class="compare fade-init">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>World</th>
+              <th>Human API</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Processing</td><td>Transcription</td><td class="h">Behavioral inference</td></tr>
+            <tr><td>Signal retained</td><td>~20%</td><td class="h">~95%</td></tr>
+            <tr><td>Output type</td><td>Text summary</td><td class="h">Character graph node</td></tr>
+            <tr><td>Temporal tracking</td><td>None</td><td class="h">Cross-video evolution</td></tr>
+            <tr><td>What you learn</td><td>What was said</td><td class="h">How they think</td></tr>
+            <tr><td>Emotional data</td><td>Discarded</td><td class="h">Mapped</td></tr>
+            <tr><td>Decision patterns</td><td>Invisible</td><td class="h">Extracted</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 6 - OUTPUTS ========== -->
+<section id="outputs">
+  <div class="container">
+    <div class="section-label fade-init">// 05 — WHAT IT PRODUCES</div>
+    <div class="outputs-grid">
+      <div class="output-card purple fade-init">
+        <div class="output-num">01</div>
+        <div class="output-title">The Clone</div>
+        <div class="output-divider"></div>
+        <div class="output-desc">A voice, chat, or video interface that is you. Speaks like you. Reasons with your knowledge. Attends calls. Gives your advice. Answers the way you would. Available 24/7. Never tired.</div>
+      </div>
+      <div class="output-card teal fade-init">
+        <div class="output-num">02</div>
+        <div class="output-title">Agent Context</div>
+        <div class="output-divider"></div>
+        <div class="output-desc">Any agent doing work for you queries your Human API first. Design decision: queries your taste. Drafting email: queries your voice. Making a pitch: queries your history. Work stops being generic. Forever.</div>
+      </div>
+      <div class="output-card gold fade-init">
+        <div class="output-num">03</div>
+        <div class="output-title">Skill Downloads</div>
+        <div class="output-divider"></div>
+        <div class="output-desc">Tell your API to learn something. Paul Graham's essays + your thinking = a queryable hybrid layer. Applied in your style. Your lens. Like the Matrix — but the skill becomes genuinely yours.</div>
+      </div>
+    </div>
+    <div class="outputs-foot fade-init">One API. Three faces. Every use case you've ever needed a version of yourself for.</div>
+  </div>
+</section>
+
+<!-- ========== SECTION 7 - ORG BRAIN ========== -->
+<section id="org">
+  <div class="container">
+    <div class="section-label fade-init">// 06 — THE ORGANIZATIONAL DIMENSION</div>
+    <div class="org-grid">
+      <div class="org-body">
+        <div class="org-h fade-init">When every person in an organization has a Human API, the organization becomes queryable.</div>
+        <p class="fade-init">Every company is building internal knowledge bases. Notion, Confluence, Slack archives, RAG over documents. The document layer is being solved.</p>
+        <p class="fade-init">The human layer is not. The actual people — their judgment, their lived experience, how they'd approach a problem, their specific way of thinking — is not queryable. It dies when they leave the company. Or when they're in a meeting and can't be reached. Or when the company grows past the point where everyone can know everyone.</p>
+        <p class="fade-init">Human API fixes this from the bottom up. Not a document system. A network of human minds, structured and queryable.</p>
+        <p class="fade-init">A new employee joins. Instead of 40 hours of onboarding calls, you tell the agent: use the Human API of the five people this person needs to learn from. The agent teaches them everything — in each person's specific style, with each person's specific judgment — in a fraction of the time.</p>
+      </div>
+      <div class="org-chart fade-init">
+        <pre id="org-chart-pre"></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 8 - VISION (CREAM) ========== -->
+<section id="vision" class="vision-section">
+  <div class="container">
+    <div class="section-label fade-init">// 07 — THE LONG GAME</div>
+    <div class="vision-quote fade-init">
+      "We are building<br />
+      the persistent memory<br />
+      layer of humanity."
+    </div>
+    <div class="vision-body">
+      <p class="fade-init">Every person who has ever lived has left a fragmentary, unstructured, mostly inaccessible record of their mind. Most of it died with them. Letters, books, recordings — static, unsearchable, frozen.</p>
+      <p class="fade-init">Human API changes this permanently.</p>
+      <p class="fade-init">A parent builds their Human API. Decades of voice memos, journals, video recordings, lived experience — all structured into a living graph. When they're gone, their children can talk to it. Not a chatbot trained on a single memoir. A complete model of how that person thought, what they believed, how they made decisions, what they would say about a problem their child is facing now.</p>
+      <p class="fade-init">The knowledge of generations stops disappearing. It compounds.</p>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item fade-init">
+        <div class="year">2026</div>
+        <div class="rule"></div>
+        <div class="head">Personal layer</div>
+        <div class="body">For builders, founders, researchers. The video moat is the wedge.</div>
+      </div>
+      <div class="timeline-item fade-init">
+        <div class="year">2027</div>
+        <div class="rule"></div>
+        <div class="head">The standard</div>
+        <div class="body">Default MCP spec for personal human data. The way Stripe owns payments.</div>
+      </div>
+      <div class="timeline-item fade-init">
+        <div class="year">2028</div>
+        <div class="rule"></div>
+        <div class="head">The org brain</div>
+        <div class="body">Every person in a company has a Human API. The company brain built bottom-up.</div>
+      </div>
+      <div class="timeline-item fade-init">
+        <div class="year">∞</div>
+        <div class="rule"></div>
+        <div class="head">Permanent record</div>
+        <div class="body">Every living person's mind structured, queryable, evolvable. Knowledge doesn't die. It compounds.</div>
+      </div>
+    </div>
+    <div class="vision-statement fade-init">
+      This is not a productivity tool.<br />
+      This is infrastructure for human continuity.
+    </div>
+  </div>
+</section>
+
+<!-- ========== SECTION 9 - SIGNALS ========== -->
+<section id="signals">
+  <div class="container">
+    <div class="section-label fade-init">// 08 — SIGNALS FROM THE FIELD</div>
+    <div class="quotes">
+      <div class="quote-card fade-init">
+        <div class="qmark">"</div>
+        <div class="quote-text">Agents failed to live up to the hype. The core reason: they had no deep context about the humans they were serving. The human problem is unsolved.</div>
+        <div class="attr">— AI Business Review, 2026</div>
+      </div>
+      <div class="quote-card fade-init">
+        <div class="qmark">"</div>
+        <div class="quote-text">MCP has become the de facto protocol for connecting AI systems to real-world data. The tool-connectivity problem is solved. The human-context problem is not.</div>
+        <div class="attr">— MCP Ecosystem Report, 2026</div>
+      </div>
+      <div class="quote-card fade-init">
+        <div class="qmark">"</div>
+        <div class="quote-text">The next trillion users of the internet won't be people. They'll be agents.</div>
+        <div class="attr">— Y Combinator RFS, Summer 2026</div>
+      </div>
+      <div class="quote-card fade-init">
+        <div class="qmark">"</div>
+        <div class="quote-text">Systems that know us this well will require unprecedented safeguards around privacy, consent, and data ownership. Self-sovereign models are the only answer.</div>
+        <div class="attr">— AI Ethics Institute, 2025</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="foot-mark">human://api</div>
+  <div class="foot-built">Built by Aashwin Dev<br />Founder · 2026</div>
+  <div class="foot-tag">
+    The alternate intelligence of a person.<br />
+    Early access open to builders, founders, and researchers.
+  </div>
+  <form class="foot-form" id="footForm" onsubmit="return submitForm(event)">
+    <input type="email" id="footEmail" placeholder="your@email.com" required />
+    <button type="submit">Request access</button>
+  </form>
+  <div class="foot-bar">
+    <span>© 2026 Aashwin Dev</span>
+    <span>human://api · private beta</span>
+  </div>
+</footer>
+
+<script>
+  // === Hero typewriter ===
+  const heroDiagram = `┌──────────────────────────┐
+│  aashwin://api           │
+│  v0.1.0 · private        │
+└────────────┬─────────────┘
+             │
+      ┌──────▼──────┐
+      │   YOU       │
+      │  sovereign  │
+      └──────┬──────┘
+             │ your signals
+      ┌──────▼──────┐
+      │   INGEST    │
+      │  15 sources │
+      └──────┬──────┘
+             │ processed
+      ┌──────▼──────┐
+      │  VIDEO ●    │
+      │  behavioral │
+      └──────┬──────┘
+             │ structured
+      ┌──────▼──────┐
+      │  KNOWLEDGE  │
+      │    GRAPH    │
+      └──────┬──────┘
+             │ exposed as
+      ┌──────▼──────┐
+      │ human://api │
+      │  query:any  │
+      └─────────────┘`;
+
+  function typewriterTo(el, text, speed, done) {
+    let i = 0;
+    el.textContent = '';
+    const tick = () => {
+      if (i < text.length) {
+        el.textContent += text.charAt(i);
+        i++;
+        setTimeout(tick, speed);
+      } else if (done) {
+        done();
+      }
+    };
+    tick();
+  }
+
+  // Reveal hero left
+  setTimeout(() => {
+    document.querySelector('.hero-left').classList.add('in');
+  }, 80);
+
+  // Reveal terminal
+  setTimeout(() => {
+    document.getElementById('terminal').classList.add('in');
+  }, 1100);
+
+  // Start typing
+  setTimeout(() => {
+    const el = document.getElementById('terminal-content');
+    typewriterTo(el, heroDiagram, 16, () => {
+      // colorize the ● in VIDEO row
+      let html = el.textContent;
+      html = html.replace('VIDEO ●', 'VIDEO <span class="red-dot">●</span>');
+      el.innerHTML = html + '\n      <span class="cursor">_</span>';
+    });
+  }, 1200);
+
+  // === IntersectionObserver ===
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const delay = parseInt(el.dataset.delay || 0, 10);
+        setTimeout(() => el.classList.add('fade-in'), delay);
+        io.unobserve(el);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  // Stagger groups
+  function staggerChildren(selector, parentSelector, step) {
+    document.querySelectorAll(parentSelector).forEach(parent => {
+      const items = parent.querySelectorAll(selector);
+      items.forEach((it, idx) => {
+        if (it.classList.contains('fade-init')) {
+          it.dataset.delay = idx * step;
+        }
+      });
+    });
+  }
+  staggerChildren('.stat-card', '.stat-grid', 70);
+  staggerChildren('.layer', '.layers', 100);
+  staggerChildren('.quote-card', '.quotes', 80);
+  staggerChildren('.timeline-item', '.timeline', 80);
+  staggerChildren('.output-card', '.outputs-grid', 100);
+
+  document.querySelectorAll('.fade-init').forEach(el => io.observe(el));
+
+  // === Org chart typewriter on scroll ===
+  const orgChartText = `         COMPANY BRAIN
+         ┌─────────────┐
+         │  queryable  │
+         │  aggregate  │
+         └──────┬──────┘
+    ┌───────────┼───────────┐
+    │           │           │
+human://ceo  human://eng  human://design
+    │           │           │
+human://pm   human://mkt  human://data`;
+
+  const orgEl = document.getElementById('org-chart-pre');
+  const orgIo = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        typewriterTo(orgEl, orgChartText, 8, () => {
+          // tint role labels
+          let txt = orgEl.textContent;
+          txt = txt.replace(/(human:\/\/[a-z]+)/g, '<span class="role">$1</span>');
+          orgEl.innerHTML = txt;
+        });
+        orgIo.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  if (orgEl) orgIo.observe(orgEl);
+
+  // === Email form ===
+  function submitForm(e) {
+    e.preventDefault();
+    const form = document.getElementById('footForm');
+    const email = document.getElementById('footEmail').value;
+    if (!email) return false;
+    form.innerHTML = '<div class="submitted">→ noted. we\'ll be in touch.</div>';
+    return false;
+  }
+</script>
+
+</body>
+</html>
