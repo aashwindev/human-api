@@ -270,6 +270,121 @@
   /* form focus */
   #waitlist-form:focus-within{box-shadow:0 0 0 4px rgba(168,122,44,.18)}
 
+  /* ============================================================
+     MOBILE OVERRIDES (≤ 640px) — desktop layout untouched above
+     ============================================================ */
+  @media (max-width:640px){
+    /* tighter page gutters */
+    .wrap{padding:0 18px}
+
+    /* nav: make CTA + brand fit cleanly */
+    nav.top .row{height:54px}
+    .brand{font-size:12px}
+    .nav-cta{padding:7px 11px;font-size:11px;letter-spacing:.04em}
+
+    /* HERO — much tighter */
+    header.hero{padding:44px 0 36px}
+    header.hero .meta{margin-bottom:28px;font-size:10px;letter-spacing:.12em;flex-wrap:wrap;gap:10px}
+    header.hero .meta .left{gap:10px;flex-wrap:wrap}
+    /* drop the founder-note text and the right-side hash to keep meta on one line */
+    header.hero .meta .left span:not(.pill){display:none}
+    header.hero .meta > div:last-child{display:none}
+
+    h1.title{font-size:clamp(48px,15vw,84px);line-height:.94;letter-spacing:-.03em}
+
+    .hero-tag{margin-top:22px;gap:22px}
+    .hero-tag .lede{font-size:17px;line-height:1.45}
+    /* hide the secondary hero blurb on mobile to shorten scroll */
+    .hero-side{display:none}
+
+    .cta-row{margin-top:28px;gap:10px}
+    .btn{padding:12px 18px;font-size:12px}
+
+    /* terminal: hide on mobile — its long code lines overflow */
+    .terminal{display:none}
+
+    /* marquee: decorative, drop on mobile */
+    .marquee{display:none}
+
+    /* SECTIONS — reduce vertical rhythm by ~half */
+    section{padding:56px 0}
+    h2{font-size:clamp(30px,8.4vw,40px);line-height:1.05}
+    .section-lede{font-size:16px;margin-top:18px}
+    .eyebrow{margin-bottom:18px;font-size:10px;letter-spacing:.18em}
+
+    /* problems */
+    .problems{margin-top:36px}
+    .problem{padding:22px 0}
+    .problem h3{font-size:20px;margin-bottom:10px}
+    .problem p{font-size:14px}
+    .problem .num{margin-bottom:12px}
+
+    /* product layers */
+    .layers{margin-top:36px;border-radius:6px}
+    .layer{padding:24px 20px}
+    .layer h4{font-size:20px;margin-top:10px}
+    .layer p{font-size:13.5px;margin-top:8px}
+
+    /* legacy */
+    section#legacy-section{padding:48px 0}
+    .legacy{margin-top:0;padding:40px 22px;border-radius:14px}
+    .legacy h3{font-size:26px;line-height:1.15}
+    .legacy p{margin-top:18px;font-size:15px;line-height:1.5}
+
+    /* moat */
+    .moat{margin-top:36px;gap:30px}
+    .moat .left p{font-size:16px;line-height:1.5;margin-top:14px}
+    .compare .h{padding:11px 16px;font-size:10px;letter-spacing:.14em}
+    .compare .row{padding:14px 16px;font-size:13.5px;gap:14px}
+
+    /* outputs */
+    .outputs{margin-top:36px;gap:16px}
+    .out{padding:22px;min-height:0}
+    .out h4{font-size:24px;margin-top:10px}
+    .out p{font-size:13.5px;margin-top:10px}
+    .out .foot{padding-top:18px;font-size:11px}
+
+    /* timeline */
+    .timeline{margin-top:36px}
+    .tl{padding:20px 0;gap:4px}
+    .tl h4{font-size:20px}
+    .tl p{font-size:14px;margin-top:6px}
+
+    /* waitlist */
+    section#waitlist{padding:56px 0 30px !important}
+    /* keep email input + button inside the rounded pill on small screens */
+    #waitlist-form{
+      margin-top:30px !important;
+      padding:5px 5px 5px 16px !important;
+      gap:6px !important;
+    }
+    #waitlist-form input[type="email"]{font-size:13px;min-width:0}
+    #waitlist-form button.btn{padding:11px 14px;font-size:11px;white-space:nowrap}
+
+    /* statement */
+    section#statement{padding:20px 0 60px !important}
+    .statement{padding:48px 22px 44px;border-radius:16px}
+    .statement-h{font-size:30px;line-height:1.08;letter-spacing:-.02em}
+    .statement-p{font-size:16px;line-height:1.5;margin-top:20px}
+    .statement-grid{margin-top:36px;padding-top:28px;gap:26px}
+    .stmt h4{font-size:18px}
+    .stmt p{font-size:13.5px;margin-top:8px}
+    .statement-foot{margin-top:36px;gap:10px;font-size:10px;letter-spacing:.22em}
+    .statement-foot .line{max-width:60px}
+
+    /* footer */
+    footer{padding:48px 0 30px}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:28px}
+    .foot-mark{font-size:36px}
+    .foot-sub{font-size:13px;margin-top:10px}
+    /* drop the Builders column (all "soon" links) to shorten footer */
+    .foot-grid > div:last-child{display:none}
+    .foot-bottom{margin-top:34px;padding-top:18px;font-size:10px;letter-spacing:.08em}
+
+    /* belt-and-braces against horizontal overflow */
+    html,body{overflow-x:hidden}
+  }
+
 </style>
 </head>
 <body>
